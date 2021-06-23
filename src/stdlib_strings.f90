@@ -4,8 +4,8 @@
 !>
 !> The specification of this module is available [here](../page/specs/stdlib_strings.html).
 module stdlib_strings
-    use stdlib_ascii, only: whitespace
-    use stdlib_string_type, only: string_type, char, verify
+    use stdlib_ascii, only: whitespace, reverse
+    use stdlib_string_type, only: string_type, char, verify, len
     use stdlib_optval, only: optval
     implicit none
     private
@@ -380,49 +380,99 @@ contains
     !> Returns the starting index of the 'occurrence'th occurrence of substring 'pattern'
     !> in input 'string'
     !> Returns an integer
-    elemental function find_string_string(string, pattern, occurrence, consider_overlapping) result(res)
+    elemental function find_string_string(string, pattern, occurrence, consider_overlapping, back) &
+                        & result(res)
         type(string_type), intent(in) :: string
         type(string_type), intent(in) :: pattern
         integer, intent(in), optional :: occurrence
         logical, intent(in), optional :: consider_overlapping
+        logical, intent(in), optional :: back
         integer :: res
 
-        res = find(char(string), char(pattern), occurrence, consider_overlapping)
+        if (optval(back, .false.)) then
+            res = find_low_level(reverse(char(string)), reverse(char(pattern)), occurrence, consider_overlapping)
+            if (res /= 0) then
+                res = len(string) - (res + len(pattern) - 1) + 1
+            end if
+        else
+            res = find_low_level(char(string), char(pattern), occurrence, consider_overlapping)
+        end if
 
     end function find_string_string
 
     !> Returns the starting index of the 'occurrence'th occurrence of substring 'pattern'
     !> in input 'string'
     !> Returns an integer
-    elemental function find_string_char(string, pattern, occurrence, consider_overlapping) result(res)
+    elemental function find_string_char(string, pattern, occurrence, consider_overlapping, back) &
+                        & result(res)
         type(string_type), intent(in) :: string
         character(len=*), intent(in) :: pattern
         integer, intent(in), optional :: occurrence
         logical, intent(in), optional :: consider_overlapping
+        logical, intent(in), optional :: back
         integer :: res
 
-        res = find(char(string), pattern, occurrence, consider_overlapping)
+        if (optval(back, .false.)) then
+            res = find_low_level(reverse(char(string)), reverse(pattern), occurrence, consider_overlapping)
+            if (res /= 0) then
+                res = len(string) - (res + len(pattern) - 1) + 1
+            end if
+        else
+            res = find_low_level(char(string), pattern, occurrence, consider_overlapping)
+        end if
 
     end function find_string_char
 
     !> Returns the starting index of the 'occurrence'th occurrence of substring 'pattern'
     !> in input 'string'
     !> Returns an integer
-    elemental function find_char_string(string, pattern, occurrence, consider_overlapping) result(res)
+    elemental function find_char_string(string, pattern, occurrence, consider_overlapping, back) &
+                        & result(res)
         character(len=*), intent(in) :: string
         type(string_type), intent(in) :: pattern
         integer, intent(in), optional :: occurrence
         logical, intent(in), optional :: consider_overlapping
+        logical, intent(in), optional :: back
         integer :: res
 
-        res = find(string, char(pattern), occurrence, consider_overlapping)
+        if (optval(back, .false.)) then
+            res = find_low_level(reverse(string), reverse(char(pattern)), occurrence, consider_overlapping)
+            if (res /= 0) then
+                res = len(string) - (res + len(pattern) - 1) + 1
+            end if
+        else
+            res = find_low_level(string, char(pattern), occurrence, consider_overlapping)
+        end if
 
     end function find_char_string
 
     !> Returns the starting index of the 'occurrence'th occurrence of substring 'pattern'
     !> in input 'string'
     !> Returns an integer
-    elemental function find_char_char(string, pattern, occurrence, consider_overlapping) result(res)
+    elemental function find_char_char(string, pattern, occurrence, consider_overlapping, back) &
+                        & result(res)
+        character(len=*), intent(in) :: string
+        character(len=*), intent(in) :: pattern
+        integer, intent(in), optional :: occurrence
+        logical, intent(in), optional :: consider_overlapping
+        logical, intent(in), optional :: back
+        integer :: res
+
+        if (optval(back, .false.)) then
+            res = find_low_level(reverse(string), reverse(pattern), occurrence, consider_overlapping)
+            if (res /= 0) then
+                res = len(string) - (res + len(pattern) - 1) + 1
+            end if
+        else
+            res = find_low_level(string, pattern, occurrence, consider_overlapping)
+        end if
+
+    end function find_char_char
+
+    !> Returns the starting index of the 'occurrence'th occurrence of substring 'pattern'
+    !> in input 'string'
+    !> Returns an integer
+    elemental function find_low_level(string, pattern, occurrence, consider_overlapping) result(res)
         character(len=*), intent(in) :: string
         character(len=*), intent(in) :: pattern
         integer, intent(in), optional :: occurrence
@@ -466,7 +516,7 @@ contains
             end do
         end if
     
-    end function find_char_char
+    end function find_low_level
 
     !> Computes longest prefix suffix for each index of the input 'string'
     !> 
