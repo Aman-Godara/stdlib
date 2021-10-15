@@ -689,7 +689,7 @@ contains
 
     !> Moves the allocated character scalar from 'from' to 'to'
     !> No output
-    pure subroutine move_string_string(from, to)
+    subroutine move_string_string(from, to)
         type(string_type), intent(inout) :: from
         type(string_type), intent(out) :: to
 
@@ -699,7 +699,7 @@ contains
 
     !> Moves the allocated character scalar from 'from' to 'to'
     !> No output
-    pure subroutine move_string_char(from, to)
+    subroutine move_string_char(from, to)
         type(string_type), intent(inout) :: from
         character(len=:), intent(out), allocatable :: to
 
@@ -709,7 +709,7 @@ contains
 
     !> Moves the allocated character scalar from 'from' to 'to'
     !> No output
-    pure subroutine move_char_string(from, to)
+    subroutine move_char_string(from, to)
         character(len=:), intent(inout), allocatable :: from
         type(string_type), intent(out) :: to
 
@@ -719,7 +719,7 @@ contains
 
     !> Moves the allocated character scalar from 'from' to 'to'
     !> No output
-    pure subroutine move_char_char(from, to)
+    subroutine move_char_char(from, to)
         character(len=:), intent(inout), allocatable :: from
         character(len=:), intent(out), allocatable :: to
 
