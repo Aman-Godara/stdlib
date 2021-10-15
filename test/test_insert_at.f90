@@ -372,12 +372,13 @@ contains
         end do
 
         call compare_list( work_list, 0, 0, 13 )
+        call check( work_list%len() == 0, "empty list insertion resulted in change in length")
 
         do j = first, last
             call work_list%insert_at( list_tail, string_type( to_string(j) ) )
         end do
-
         temp_list = work_list
+
         call work_list%insert_at( list_head, work_list )
         call compare_list( work_list, first, last + 1, 14, to=last - first + 1 )
         call compare_list( work_list, first, last + 1, 15, from=last - first + 2 )
@@ -390,13 +391,15 @@ contains
         work_list = temp_list
         call compare_list( work_list, first, last + 1, 18 )
 
+        write (*,*) "test_insert_at_same_list:     Starting temp_list!"
+
         do j = 1, last - first + 2
             temp_list = work_list
             call temp_list%insert_at( fidx(j), temp_list )
 
-            call compare_list( temp_list, first, first + j - 1, 19, to=j - 1)
-            call compare_list( temp_list, first, last + 1, 20, from=j, to=j + last - first)
-            call compare_list( temp_list, first + j - 1, last + 1, 21, from=j + last - first + 1)
+            call compare_list( temp_list, first, first + j - 1, 19, to=j - 1 )
+            call compare_list( temp_list, first, last + 1, 20, from=j, to=j + last - first )
+            call compare_list( temp_list, first + j - 1, last + 1, 21, from=j + last - first + 1 )
 
         end do
 
