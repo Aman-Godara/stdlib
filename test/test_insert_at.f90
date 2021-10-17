@@ -423,7 +423,7 @@ contains
         do i = work_from, work_to
             call check( list%get( fidx(i) ) == to_string( first + ( ( i - work_from ) * j ) ), &
                                     & "compare_list: call_number " // to_string( call_number ) &
-                                    & // " fidx( " // to_string( i ) // " )" // to_string( list%len() ) )
+                                    & // " fidx( " // to_string( i ) // " )" // to_string(-100) )
 
             k = length - ( work_to - ( i - work_from ) ) + 1
             call check( list%get( bidx(k) ) == &
