@@ -420,16 +420,16 @@ contains
                                         & call_number " // to_string( call_number ) )
 
         j = merge(-1, 1, last < first)
-        do i = work_from, work_to
+        do i = work_from + 1, work_to
             call check( list%get( fidx(i) ) == to_string( first + ( ( i - work_from ) * j ) ), &
                                     & "compare_list: call_number " // to_string( call_number ) &
-                                    & // " fidx( " // to_string( i ) // " )" // char(list%get( fidx(i) )) )
+                                    & // " fidx( " // to_string( i ) // " )" // char(list%get( fidx(i) )) // "$" )
 
             k = length - ( work_to - ( i - work_from ) ) + 1
             call check( list%get( bidx(k) ) == &
                                     & to_string( last - ( ( i - work_from + 1 ) * j ) ), &
                                     & "compare_list: call_number " // to_string( call_number ) &
-                                    & // " bidx( " // to_string( k ) // " )" )
+                                    & // " bidx( " // to_string( k ) // " )" // char(list%get( bidx(k) )) // "$" )
         end do
 
     end subroutine compare_list
